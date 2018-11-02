@@ -5,6 +5,7 @@ import requests
 from .errors import VkError
 from .helpers import get_query_string
 from .models.messages import Message
+from .models.requests import IncomingRequest, IncomingMessage
 
 
 class VkClient(object):
@@ -14,6 +15,30 @@ class VkClient(object):
         self._vk_api_url = 'https://api.vk.com/method'
         self._api_version = '5.87'
         self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
+        self._text_message_processor = None
+        self._callback_query_processor = None
+
+    def register_message_processor(self):
+        def add(processor):
+            self._text_message_processor = processor
+            return processor
+
+        return add
+
+    def register_callback_query_processor(self):
+        def add(processor):
+            self._callback_query_processor = processor
+            return processor
+
+        return add
+
+    def process_json(self, msg: dict):
+        if not isinstance(msg, dict):
+            raise TypeError('msg must be an instance of dict')
+        request = IncomingRequest(**msg)
+        if isinstance(request.object, IncomingMessage):
+            pass
+
 
     def send_message(self, user_id: int, message: Message):
         if not isinstance(user_id, int):
