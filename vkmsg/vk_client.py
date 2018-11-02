@@ -16,11 +16,20 @@ class VkClient(object):
         self._api_version = '5.87'
         self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
         self._text_message_processor = None
+        self._callback_processor = None
 
     def register_text_message_processor(self):
         def add(processor):
             self._text_message_processor = processor
             return processor
+
+        return add
+
+    def register_callback_processor(self):
+        def add(processor):
+            self._callback_processor = processor
+            return processor
+
         return add
 
     def process_json(self, msg: dict):
@@ -28,11 +37,17 @@ class VkClient(object):
             raise TypeError('msg must be an instance of dict')
         request = IncomingRequest(**msg)
         if isinstance(request.object, IncomingMessage):
-            if not self._text_message_processor:
-                raise AttributeError('_text_message_processor not declared')
-            self._text_message_processor()
+            if hasattr(request.object, 'payload'):
+                if not self._callback_processor:
+                    raise AttributeError('_callback_processor not declared')
+                self._callback_processor(request)
+                return None
+            else:
+                if not self._text_message_processor:
+                    raise AttributeError('_text_message_processor not declared')
+                self._text_message_processor(request)
+                return None
         raise Exception('Now available just text_message')
-
 
     def send_message(self, user_id: int, message: Message):
         if not isinstance(user_id, int):
@@ -41,6 +56,8 @@ class VkClient(object):
             raise TypeError('message must be an instance of Message')
         msg = message.to_dict()
         msg['user_id'] = user_id
+        if msg.get('keyboard'):
+            msg['keyboard'] = json.dumps(msg['keyboard'])
         result = self.post_request('messages.send', msg)
         if 'error' in result:
             raise VkError(**result['error'])

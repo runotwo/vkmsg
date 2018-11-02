@@ -16,5 +16,5 @@ class Message(object):
             'message': self.message,
         }
         if self.keyboard:
-            res['keyboard'] = self.keyboard
+            res['keyboard'] = self.keyboard.to_dict()
         return res

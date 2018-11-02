@@ -1,5 +1,5 @@
 class Button(object):
-    def __init__(self, label: str, payload: str, color: str = "Primary"):
+    def __init__(self, label: str, payload: str, color: str = "primary"):
         if not isinstance(label, str):
             raise TypeError('label must be an instance of str')
         if not isinstance(payload, str):
