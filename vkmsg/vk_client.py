@@ -16,20 +16,11 @@ class VkClient(object):
         self._api_version = '5.87'
         self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
         self._text_message_processor = None
-        self._callback_query_processor = None
 
-    def register_message_processor(self):
+    def register_text_message_processor(self):
         def add(processor):
             self._text_message_processor = processor
             return processor
-
-        return add
-
-    def register_callback_query_processor(self):
-        def add(processor):
-            self._callback_query_processor = processor
-            return processor
-
         return add
 
     def process_json(self, msg: dict):
@@ -37,7 +28,10 @@ class VkClient(object):
             raise TypeError('msg must be an instance of dict')
         request = IncomingRequest(**msg)
         if isinstance(request.object, IncomingMessage):
-            pass
+            if not self._text_message_processor:
+                raise AttributeError('_text_message_processor not declared')
+            self._text_message_processor()
+        raise Exception('Now available just text_message')
 
 
     def send_message(self, user_id: int, message: Message):

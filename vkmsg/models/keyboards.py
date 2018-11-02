@@ -22,17 +22,27 @@ class Button(object):
 
 
 class Keyboard(object):
-    def __init__(self, button_rows: list, one_time: bool = False):
-        for row in button_rows:
-            if not isinstance(row, list):
-                raise TypeError('row must be an instance of list')
-            for button in row:
-                if not isinstance(button, Button):
-                    raise TypeError('button must be an instance of Button')
+    def __init__(self, button_rows: list = None, one_time: bool = False):
+        self.button_rows = []
+        if button_rows is not None:
+            for row in button_rows:
+                if not isinstance(row, list):
+                    raise TypeError('row must be an instance of list')
+                for button in row:
+                    if not isinstance(button, Button):
+                        raise TypeError('button must be an instance of Button')
+            self.button_rows = button_rows
         if not isinstance(one_time, bool):
             raise TypeError('one_time must be an instance of bool')
-        self.button_rows = button_rows
         self.one_time = one_time
+
+    def row(self, row: list):
+        if not isinstance(row, list):
+            raise TypeError('row must be an instance of list')
+        for button in row:
+            if not isinstance(button, Button):
+                raise TypeError('button must be an instance of Button')
+        self.button_rows.append(row)
 
     def to_dict(self):
         return {
