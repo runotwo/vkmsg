@@ -1,9 +1,9 @@
 import json
+from urllib.parse import urlencode
 
 import requests
 
 from .errors import VkError
-from .helpers import get_query_string
 from .models.messages import Message
 from .models.requests import IncomingRequest, IncomingMessage
 
@@ -87,7 +87,8 @@ class VkClient(object):
         if not isinstance(data, dict):
             raise TypeError('data must be an instance of dict')
         headers = requests.utils.default_headers()
-        query_string = get_query_string(access_token=self.token, v=self._api_version, group_id=self.group_id, **data)
-        response = requests.post(f'{self._vk_api_url}/{endpoint}' + query_string, headers=headers)
+        data.update({'access_token': self.token, 'v': self._api_version, 'group_id': self.group_id})
+        data = urlencode(data)
+        response = requests.post(f'{self._vk_api_url}/{endpoint}', data=data, headers=headers)
         response.raise_for_status()
         return json.loads(response.text)

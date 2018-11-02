@@ -1,7 +1,6 @@
 import pytest
 
 from vkmsg.errors import VkError
-from vkmsg.helpers import get_query_string
 from vkmsg.models.keyboards import Keyboard, Button
 from vkmsg.models.messages import Message
 from vkmsg.models.requests import IncomingMessage, IncomingRequest
@@ -87,4 +86,3 @@ class TestRequests:
 class TestHelpers:
     def test_helpers(self):
         assert str(VkError(100, 'test', {})) == 'CODE: 100 MSG: test'
-        assert get_query_string(test='test') == '?test=test&'
