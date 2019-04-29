@@ -36,6 +36,8 @@ class VkClient(object):
         if not isinstance(msg, dict):
             raise TypeError('msg must be an instance of dict')
         request = IncomingRequest(**msg)
+        if request.type == 'confirmation':
+            return msg
         if isinstance(request.object, IncomingMessage):
             if hasattr(request.object, 'payload'):
                 if not self._callback_processor:
