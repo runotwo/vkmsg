@@ -66,7 +66,7 @@ class VkClient(object):
     def get_callback_confirmation_code(self):
         result = self.post_request('groups.getCallbackConfirmationCode')
         if 'error' in result:
-            raise VkError(**result['error '])
+            raise VkError(**result['error'])
         return result['response']
 
     def set_webhook(self, url: str, title: str):
