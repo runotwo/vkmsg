@@ -40,13 +40,13 @@ class VkClient(object):
             if hasattr(request.object, 'payload'):
                 if not self._callback_processor:
                     raise AttributeError('_callback_processor not declared')
-                self._callback_processor(request)
-                return None
+                response = self._callback_processor(request)
+                return response
             else:
                 if not self._text_message_processor:
                     raise AttributeError('_text_message_processor not declared')
-                self._text_message_processor(request)
-                return None
+                response = self._text_message_processor(request)
+                return response
         raise Exception('Now available just text_message')
 
     def send_message(self, user_id: int, message: Message):
