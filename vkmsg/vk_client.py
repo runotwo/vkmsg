@@ -13,7 +13,7 @@ class VkClient(object):
         self.token = token
         self.group_id = group_id
         self._vk_api_url = 'https://api.vk.com/method'
-        self._api_version = '5.87'
+        self._api_version = '5.95'
         self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
         self._text_message_processor = None
         self._callback_processor = None
