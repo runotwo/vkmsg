@@ -5,13 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="vkmsg",
-    version="0.0.1",
-    author="Appvelox LLC",
-    author_email="team@appvelox.ru",
+    version="0.1",
+    author="runotwo",
     description="Simple but yet functional library for building VK bots",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/AppVelox/vkmsg",
+    url="https://github.com/runotwo/vkmsg",
     packages=setuptools.find_packages(exclude=['tests*', 'examples*']),
     classifiers=[
         "Intended Audience :: Developers",

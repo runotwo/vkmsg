@@ -14,7 +14,10 @@ class VkClient(object):
         self.group_id = group_id
         self._vk_api_url = 'https://api.vk.com/method'
         self._api_version = '5.95'
-        self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
+        try:
+            self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
+        except requests.exceptions.HTTPError:
+            self.callback_confirmation_code = None
         self._text_message_processor = None
         self._attachments_message_processor = None
         self._callback_processor = None
