@@ -5,7 +5,7 @@ class IncomingMessage(object):
     def __init__(self, **kwargs):
         for key in kwargs:
             if key == 'attachments':
-                self.attachments = [Attachment(x) for x in kwargs[key]]
+                self.attachments = [Attachment(**x) for x in kwargs[key]]
                 continue
             setattr(self, key, kwargs[key])
 
