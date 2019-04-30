@@ -16,11 +16,19 @@ class VkClient(object):
         self._api_version = '5.95'
         self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
         self._text_message_processor = None
+        self._attachments_message_processor = None
         self._callback_processor = None
 
     def register_text_message_processor(self):
         def add(processor):
             self._text_message_processor = processor
+            return processor
+
+        return add
+
+    def register_attachments_message_processor(self):
+        def add(processor):
+            self._attachments_message_processor = processor
             return processor
 
         return add
@@ -43,6 +51,11 @@ class VkClient(object):
                 if not self._callback_processor:
                     raise AttributeError('_callback_processor not declared')
                 response = self._callback_processor(request)
+                return response
+            if request.object.attachments:
+                if not self._attachments_message_processor:
+                    raise AttributeError('_attachments_message_processor not declared')
+                response = self._attachments_message_processor(request)
                 return response
             else:
                 if not self._text_message_processor:
