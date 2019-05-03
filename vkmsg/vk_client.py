@@ -1,5 +1,6 @@
 import json
 from urllib.parse import urlencode
+import logging
 
 import requests
 
@@ -16,7 +17,8 @@ class VkClient(object):
         self._api_version = '5.95'
         try:
             self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
-        except requests.exceptions.HTTPError:
+        except VkError:
+            logging.WARNING('Vk Token can be invalid')
             self.callback_confirmation_code = None
         self._text_message_processor = None
         self._attachments_message_processor = None
