@@ -34,7 +34,7 @@ class Photo(object):
     def __init__(self, **kwargs):
         for key in kwargs:
             if key == 'sizes':
-                self.image_url = kwargs[key][len((kwargs[key] - 1) // 2)]['url']
+                self.image_url = kwargs[key][max(1, len(kwargs[key]))]['url']
                 continue
             setattr(self, key, kwargs[key])
 
