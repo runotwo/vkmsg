@@ -1,5 +1,7 @@
 import json
 from urllib.parse import urlencode
+import logging
+from random import randint
 
 import requests
 
@@ -16,7 +18,9 @@ class VkClient(object):
         self._api_version = '5.95'
         try:
             self.callback_confirmation_code = self.get_callback_confirmation_code()['code']
-        except requests.exceptions.HTTPError:
+        except VkError:
+            logging.warning(
+                'Vk Token can be invalid')
             self.callback_confirmation_code = None
         self._text_message_processor = None
         self._attachments_message_processor = None
@@ -74,6 +78,7 @@ class VkClient(object):
             raise TypeError('message must be an instance of Message')
         msg = message.to_dict()
         msg['user_id'] = user_id
+        msg['random_id'] = randint(0, 2000000000)
         if msg.get('keyboard'):
             msg['keyboard'] = json.dumps(msg['keyboard'])
         result = self.post_request('messages.send', msg)
