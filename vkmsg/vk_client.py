@@ -95,6 +95,11 @@ class VkClient(object):
         result = self.post_request('groups.addCallbackServer', {'url': url, 'title': title})
         if 'error' in result:
             raise VkError(**result['error'])
+        server_id = result['response']['server_id']
+        result = self.post_request('groups.setCallbackSettings', {'server_id': server_id,
+                                                                  'api_version': self._api_version, 'message_new': 1})
+        if 'error' in result:
+            raise VkError(**result['error'])
         return result['response']
 
     def post_request(self, endpoint: str, data: dict = None):
