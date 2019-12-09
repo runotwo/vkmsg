@@ -22,7 +22,7 @@ class Button(object):
 
 
 class Keyboard(object):
-    def __init__(self, button_rows: list = None, one_time: bool = False):
+    def __init__(self, button_rows: list = None, one_time: bool = False, inline: bool = False):
         self.button_rows = []
         if button_rows is not None:
             for row in button_rows:
@@ -35,6 +35,7 @@ class Keyboard(object):
         if not isinstance(one_time, bool):
             raise TypeError('one_time must be an instance of bool')
         self.one_time = one_time
+        self.inline = inline
 
     def row(self, row: list):
         if not isinstance(row, list):
@@ -47,5 +48,6 @@ class Keyboard(object):
     def to_dict(self):
         return {
             'one_time': self.one_time,
+            'inline': self.inline,
             "buttons": [[button.to_dict() for button in row] for row in self.button_rows]
         }
